@@ -1,66 +1,60 @@
-Compiler Design Project
+# Compiler Design Project (PBL)
 
-Project Overview
+## Project Overview
+This project is a **Compiler Design** implementation as part of our **Project-Based Learning (PBL)** for college. The compiler is designed to tokenize, parse, and evaluate arithmetic expressions using a custom-built interpreter.
 
-This project is a Compiler Design implementation for Project-Based Learning (PBL) in college. It involves building a simple compiler that can tokenize, parse, and evaluate mathematical expressions.
+## Features
+- **Lexer:** Tokenizes the input source code.
+- **Parser:** Generates an Abstract Syntax Tree (AST).
+- **Evaluator:** Interprets and evaluates expressions.
+- **Supports:** Basic arithmetic operations (`+`, `-`, `*`, `/`).
 
-Features
+## Tech Stack
+- **Deno** (Runtime)
+- **TypeScript** (Programming Language)
 
-Lexical Analysis: Tokenizing source code into meaningful symbols.
+## Project Structure
+```
+├── frontend/
+│   ├── ast.ts          # Defines AST node structures
+│   ├── lexer.ts        # Tokenizes input code
+│   ├── parser.ts       # Parses tokens into AST
+│
+├── runtime/
+│   ├── evaluator.ts    # Evaluates AST
+│   ├── values.ts       # Defines runtime values
+│
+├── main.ts             # Entry point of the compiler
+├── README.md           # Project documentation
+```
 
-Parsing: Constructing an Abstract Syntax Tree (AST) from tokens.
+## Installation & Running
+1. Install [Deno](https://deno.land/).
+2. Clone this repository:
+   ```sh
+   git clone https://github.com/your-repo/compiler-pbl.git
+   ```
+3. Navigate to the project folder:
+   ```sh
+   cd compiler-pbl
+   ```
+4. Run the compiler:
+   ```sh
+   deno run -A main.ts
+   ```
 
-Evaluation: Interpreting and executing mathematical expressions.
+## Example Input
+```
+10 + 5 * 2 - 3
+```
 
-Error Handling: Detecting unexpected tokens and division by zero errors.
+## Output
+```
+17
+```
 
-Technologies Used
+## Contributors
+- **Navneet Pathak**
 
-Deno (for runtime execution)
-
-TypeScript (for structured development)
-
-Project Structure
-
-📂 project-root/
-├── 📂 frontend/
-│   ├── ast.ts           # Abstract Syntax Tree definitions
-│   ├── lexer.ts         # Lexical analyzer (tokenizer)
-│   ├── parser.ts        # Parser to build AST
-├── 📂 runtime/
-│   ├── evaluator.ts     # Evaluates AST nodes
-│   ├── values.ts        # Runtime values and types
-├── main.ts              # Entry point of the compiler
-├── README.md            # Project documentation
-
-How to Run
-
-Install Deno from deno.land.
-
-Clone the repository:
-
-cd compiler-project
-
-Run the compiler:
-
-deno run -A main.ts
-
-Enter expressions like:
-
-> 10 + 5
-> 20 * 3
-
-Future Enhancements
-
-Implement variable assignments.
-
-Add support for more complex expressions.
-
-Improve error reporting with better debugging messages.
-
-Author
-
-Navneet Pathak - College PBL Project
-
-💡 This project is an educational initiative and serves as a foundational step toward understanding compiler design concepts.
-
+## License
+This project is for educational purposes only.
