@@ -32,11 +32,11 @@ This project is a **Compiler Design** implementation as part of our **Project-Ba
 1. Install [Deno](https://deno.land/).
 2. Clone this repository:
    ```sh
-   git clone https://github.com/your-repo/compiler-pbl.git
+   https://github.com/navneetpathak1/compiler_project
    ```
 3. Navigate to the project folder:
    ```sh
-   cd compiler-pbl
+   cd compiler_project
    ```
 4. Run the compiler:
    ```sh
