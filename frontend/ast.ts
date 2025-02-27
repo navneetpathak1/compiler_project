@@ -1,39 +1,64 @@
 
-export type NodeType = "Program" | "NumericLiteral" | "NullLiteral" | "Identifier" | "BinaryExpr";
+export type NodeType =
+  // STATEMENTS
+  | "Program"
+  | "VarDeclaration"
+  // EXPRESSIONS
+  | "NumericLiteral"
+  | "Identifier"
+  | "BinaryExpr";
 
-// let x = if true? {45} : {55} thats not allowed in owr language 
-// awr language work like c
-
+/**
+ * Statements do not result in a value at runtime.
+ They contain one or more expressions internally */
 export interface Stmt {
   kind: NodeType;
 }
 
+/**
+ * Defines a block which contains many statements.
+ * -  Only one program will be contained in a file.
+ */
 export interface Program extends Stmt {
-    kind : "Program";
-    body: Stmt[];
+  kind: "Program";
+  body: Stmt[];
+}
+// let x; // x can be undefined
+export interface VarDeclaration extends Stmt {
+  kind: "VarDeclaration";
+  constant: boolean;
+  identifier: string;
+  value?: Expr; // optional
 }
 
+/**  Expressions will result in a value at runtime unlike Statements */
 export interface Expr extends Stmt {}
 
+/**
+ * A operation with two sides seperated by a operator.
+ * Both sides can be ANY Complex Expression.
+ * - Supported Operators -> + | - | / | * | %
+ */
 export interface BinaryExpr extends Expr {
-    kind: "BinaryExpr";
-    left: Expr;
-    right: Expr;
-    operator: string; 
+  kind: "BinaryExpr";
+  left: Expr;
+  right: Expr;
+  operator: string; // needs to be of type BinaryOperator
 }
 
+// LITERAL / PRIMARY EXPRESSION TYPES
+/**
+ * Represents a user-defined variable or symbol in source.
+ */
 export interface Identifier extends Expr {
-    kind: "Identifier";
-    symbol: string;
+  kind: "Identifier";
+  symbol: string;
 }
 
+/**
+ * Represents a numeric constant inside the soure code.
+ */
 export interface NumericLiteral extends Expr {
-    kind: "NumericLiteral";
-    value: number;
+  kind: "NumericLiteral";
+  value: number;
 }
-
-export interface NullLiteral extends Expr {
-    kind: "NullLiteral";
-    value: "null";
-}
-
