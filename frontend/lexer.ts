@@ -1,136 +1,166 @@
-
+// Define all possible token types that can appear in the source code.
 export enum TokenType {
-  // Literal Types
-  Number,
-  Identifier,
-  // Keywords
-  Let,
-  Const,
+	// Literals (actual values)
+	Number,          // Example: 123
+	Identifier,      // Example: variable names like x, y, etc.
+	// Keywords (reserved words)
+	Let,             // 'let' keyword
+	Const,           // 'const' keyword
+	Fn,              // 'fn' keyword (for defining functions)
 
-  // Grouping * Operators
-  BinaryOperator,
-  Equals,
-  Semicolon,
-  OpenParen,
-  CloseParen,
-  EOF, // Signified the end of file
+	// Symbols and operators
+	BinaryOperator,  // +, -, *, /, %
+	Equals,          // =
+	Comma,           // ,
+	Dot,             // .
+	Colon,           // :
+	Semicolon,       // ;
+	OpenParen,       // (
+	CloseParen,      // )
+	OpenBrace,       // {
+	CloseBrace,      // }
+	OpenBracket,     // [
+	CloseBracket,    // ]
+	EOF,             // Special token marking the end of the file
 }
 
 /**
- * Constant lookup for keywords and known identifiers + symbols.
+ * This is a lookup table for reserved keywords.
+ * When the lexer encounters one of these words, it knows to create a keyword token.
  */
 const KEYWORDS: Record<string, TokenType> = {
-  let: TokenType.Let,
-  const: TokenType.Const,
+	let: TokenType.Let,
+	const: TokenType.Const,
+	fn: TokenType.Fn,
 };
 
-// Reoresents a single token from the source-code.
+// Represents a single token produced by the lexer.
 export interface Token {
-  value: string; // contains the raw value as seen inside the source code.
-  type: TokenType; // tagged structure.
+	value: string;   // The actual text from the source code.
+	type: TokenType; // The type of token it represents (e.g., Number, Identifier, etc.)
 }
 
-// Returns a token of a given type and value
+// Helper function to create a token.
 function token(value = "", type: TokenType): Token {
-  return { value, type };
+	return { value, type };
 }
 
 /**
- * Returns whether the character passed in alphabetic -> [a-zA-Z]
+ * Checks if a character is an alphabetic letter (A-Z or a-z).
  */
 function isalpha(src: string) {
-  return src.toUpperCase() != src.toLowerCase();
+	return src.toUpperCase() != src.toLowerCase();
 }
 
 /**
- * Returns true if the character is whitespace like -> [\s, \t, \n]
+ * Checks if a character is a type of whitespace (space, tab, newline, etc.).
  */
 function isskippable(str: string) {
-  return str == " " || str == "\n" || str == "\t";
+	return str == " " || str == "\n" || str == "\t" || str == "\r";
 }
 
 /**
- Return whether the character is a valid integer -> [0-9]
+ * Checks if a character is a numeric digit (0-9).
  */
 function isint(str: string) {
-  const c = str.charCodeAt(0);
-  const bounds = ["0".charCodeAt(0), "9".charCodeAt(0)];
-  return c >= bounds[0] && c <= bounds[1];
+	const c = str.charCodeAt(0);
+	const bounds = ["0".charCodeAt(0), "9".charCodeAt(0)];
+	return c >= bounds[0] && c <= bounds[1];
 }
 
 /**
- * Given a string representing source code: Produce tokens and handles
- * possible unidentified characters.
- *
- * - Returns a array of tokens.
- * - Does not modify the incoming string.
+ * Main function that takes source code and converts it into a list of tokens.
+ * 
+ * - Reads characters from `sourceCode`.
+ * - Matches characters into tokens like numbers, keywords, operators, etc.
+ * - Returns a list of tokens.
  */
 export function tokenize(sourceCode: string): Token[] {
-  const tokens = new Array<Token>();
-  const src = sourceCode.split("");
+	const tokens = new Array<Token>();
+	const src = sourceCode.split(""); // Convert source string into array of characters.
 
-  // produce tokens until the EOF is reached.
-  while (src.length > 0) {
-    // BEGIN PARSING ONE CHARACTER TOKENS
-    if (src[0] == "(") {
-      tokens.push(token(src.shift(), TokenType.OpenParen));
-    } else if (src[0] == ")") {
-      tokens.push(token(src.shift(), TokenType.CloseParen));
-    } // HANDLE BINARY OPERATORS
-    else if (
-      src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" ||
-      src[0] == "%"
-    ) {
-      tokens.push(token(src.shift(), TokenType.BinaryOperator));
-    } // Handle Conditional & Assignment Tokens
-    else if (src[0] == "=") {
-      tokens.push(token(src.shift(), TokenType.Equals));
-    } else if (src[0] == ";") {
-      tokens.push(token(src.shift(), TokenType.Semicolon));
-    } // HANDLE MULTICHARACTER KEYWORDS, TOKENS, IDENTIFIERS ETC...
-    else {
-      // Handle numeric literals -> Integers
-      if (isint(src[0])) {
-        let num = "";
-        while (src.length > 0 && isint(src[0])) {
-          num += src.shift();
-        }
+	// Continue processing until all characters are consumed.
+	while (src.length > 0) {
+		// Process one-character tokens like parentheses and braces.
+		if (src[0] == "(") {
+			tokens.push(token(src.shift(), TokenType.OpenParen));
+		} else if (src[0] == ")") {
+			tokens.push(token(src.shift(), TokenType.CloseParen));
+		} else if (src[0] == "{") {
+			tokens.push(token(src.shift(), TokenType.OpenBrace));
+		} else if (src[0] == "}") {
+			tokens.push(token(src.shift(), TokenType.CloseBrace));
+		} else if (src[0] == "[") {
+			tokens.push(token(src.shift(), TokenType.OpenBracket));
+		} else if (src[0] == "]") {
+			tokens.push(token(src.shift(), TokenType.CloseBracket));
+		} 
+		// Process operators like +, -, *, /, %
+		else if (
+			src[0] == "+" ||
+			src[0] == "-" ||
+			src[0] == "*" ||
+			src[0] == "/" ||
+			src[0] == "%"
+		) {
+			tokens.push(token(src.shift(), TokenType.BinaryOperator));
+		} 
+		// Process assignment and punctuation symbols.
+		else if (src[0] == "=") {
+			tokens.push(token(src.shift(), TokenType.Equals));
+		} else if (src[0] == ";") {
+			tokens.push(token(src.shift(), TokenType.Semicolon));
+		} else if (src[0] == ":") {
+			tokens.push(token(src.shift(), TokenType.Colon));
+		} else if (src[0] == ",") {
+			tokens.push(token(src.shift(), TokenType.Comma));
+		} else if (src[0] == ".") {
+			tokens.push(token(src.shift(), TokenType.Dot));
+		} 
+		// Process multi-character tokens like numbers and identifiers/keywords.
+		else {
+			// Process numeric literals (like 123).
+			if (isint(src[0])) {
+				let num = "";
+				while (src.length > 0 && isint(src[0])) {
+					num += src.shift();
+				}
+				tokens.push(token(num, TokenType.Number));
+			} 
+			// Process identifiers (like variable names) and check for keywords.
+			else if (isalpha(src[0])) {
+				let ident = "";
+				while (src.length > 0 && isalpha(src[0])) {
+					ident += src.shift();
+				}
 
-        // append new numeric token.
-        tokens.push(token(num, TokenType.Number));
-      } // Handle Identifier & Keyword Tokens.
-      else if (isalpha(src[0])) {
-        let ident = "";
-        while (src.length > 0 && isalpha(src[0])) {
-          ident += src.shift();
-        }
+				// Check if the identifier is a reserved keyword.
+				const reserved = KEYWORDS[ident];
+				if (typeof reserved == "number") {
+					// It's a keyword (like `let` or `fn`)
+					tokens.push(token(ident, reserved));
+				} else {
+					// Otherwise it's a regular identifier (like variable names).
+					tokens.push(token(ident, TokenType.Identifier));
+				}
+			} 
+			// Skip whitespace.
+			else if (isskippable(src[0])) {
+				src.shift(); // Just discard it.
+			} 
+			// Handle any unexpected characters (error case).
+			else {
+				console.error(
+					"Unrecognized character found in source: ",
+					src[0].charCodeAt(0),
+					src[0]
+				);
+				Deno.exit(1); // Exit with error code.
+			}
+		}
+	}
 
-        // CHECK FOR RESERVED KEYWORDS
-        const reserved = KEYWORDS[ident];
-        // If value is not undefined then the identifier is
-        // reconized keyword
-        if (typeof reserved == "number") {
-          tokens.push(token(ident, reserved));
-        } else {
-          // Unreconized name must mean user defined symbol.
-          tokens.push(token(ident, TokenType.Identifier));
-        }
-      } else if (isskippable(src[0])) {
-        // Skip uneeded chars.
-        src.shift();
-      } // Handle unreconized characters.
-      // TODO: Impliment better errors and error recovery.
-      else {
-        console.error(
-          "Unreconized character found in source: ",
-          src[0].charCodeAt(0),
-          src[0],
-        );
-        Deno.exit(1);
-      }
-    }
-  }
-
-  tokens.push({ type: TokenType.EOF, value: "EndOfFile" });
-  return tokens;
+	// Finally, append the end-of-file token.
+	tokens.push({ type: TokenType.EOF, value: "EndOfFile" });
+	return tokens;
 }

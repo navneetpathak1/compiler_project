@@ -1,33 +1,32 @@
+// Import the Parser class which handles parsing the source code into an AST
 import Parser from "./frontend/parser.ts";
-import Environment from "./runtime/environment.ts";
+
+// Import function to create the global environment (scope for variables and functions)
+import { createGlobalEnv } from "./runtime/environment.ts";
+
+// Import the evaluate function which interprets and executes the AST
 import { evaluate } from "./runtime/interpreter.ts";
-import { MK_BOOL, MK_NULL, MK_NUMBER } from "./runtime/values.ts";
-repl();
 
-function repl() {
-  const parser = new Parser();
-  const env = new Environment();
+// Entry point - run the interpreter with a file (test.txt in this case)
+run("./test.txt");
 
-  // Create Default Global Enviornment
-  env.declareVar("true", MK_BOOL(true), true);
-  env.declareVar("false", MK_BOOL(false), true);
-  env.declareVar("null", MK_NULL(), true);
+// Main function to read and execute the file
+async function run(filename: string) {
+	// Create a new parser instance
+	const parser = new Parser();
 
-  // INITIALIZE REPL
-  console.log("\nRepl v0.1");
+	// Set up the global environment where variables and functions will live
+	const env = createGlobalEnv();
 
-  // Continue Repl Until User Stops Or Types `exit`
-  while (true) {
-    const input = prompt("> ");
-    // Check for no user input or exit keyword.
-    if (!input || input.includes("exit")) {
-      Deno.exit(1);
-    }
+	// Read the source code from the provided file
+	const input = await Deno.readTextFile(filename);
 
-    // Produce AST From sourc-code
-    const program = parser.produceAST(input);
+	// Parse the source code into an Abstract Syntax Tree (AST)
+	const program = parser.produceAST(input);
 
-    const result = evaluate(program, env);
-    console.log(result);
-  }
+	// Evaluate (execute) the program using the global environment
+	const result = evaluate(program, env);
+
+	// Optional: Uncomment to see the final evaluation result (helpful for debugging)
+	// console.log(result);
 }

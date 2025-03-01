@@ -1,60 +1,38 @@
-# Compiler Design Project (PBL)
+# 🧑‍💻 Custom Scripting Language Interpreter
 
-## Project Overview
-This project is a **Compiler Design** implementation as part of our **Project-Based Learning (PBL)** for college. The compiler is designed to tokenize, parse, and evaluate arithmetic expressions using a custom-built interpreter.
+This project implements a simple interpreted scripting language built with TypeScript and Deno. It includes a **parser, interpreter, and runtime environment** to run programs written in the custom language.
 
-## Features
-- **Lexer:** Tokenizes the input source code.
-- **Parser:** Generates an Abstract Syntax Tree (AST).
-- **Evaluator:** Interprets and evaluates expressions.
-- **Supports:** Basic arithmetic operations (`+`, `-`, `*`, `/`).
+## 📚 Features
 
-## Tech Stack
-- **Deno** (Runtime)
-- **TypeScript** (Programming Language)
+- ✅ Supports:
+    - Variable Declarations (`let`, `const`)
+    - Functions (user-defined)
+    - Arithmetic Operations (`+`, `-`, `*`, `/`, `%`)
+    - Object Literals
+    - Function Calls
+- ✅ Built-in Functions:
+    - `print(...)`: Print values to console.
+    - `time()`: Get current timestamp.
+- ✅ Supported Data Types:
+    - Numbers
+    - Booleans (`true`, `false`)
+    - Null (`null`)
+    - Objects
+    - Functions
+- ✅ Lexing, Parsing, and AST Generation
+- ✅ AST Interpretation with Nested Scopes and Closures
+- ✅ Basic Error Handling
 
-## Project Structure
-```
-├── frontend/
-│   ├── ast.ts          # Defines AST node structures
-│   ├── lexer.ts        # Tokenizes input code
-│   ├── parser.ts       # Parses tokens into AST
-│
-├── runtime/
-│   ├── evaluator.ts    # Evaluates AST
-│   ├── values.ts       # Defines runtime values
-│
-├── main.ts             # Entry point of the compiler
-├── README.md           # Project documentation
-```
+---
 
-## Installation & Running
-1. Install [Deno](https://deno.land/).
-2. Clone this repository:
-   ```sh
-   https://github.com/navneetpathak1/compiler_project
-   ```
-3. Navigate to the project folder:
-   ```sh
-   cd compiler_project
-   ```
-4. Run the compiler:
-   ```sh
-   deno run -A main.ts
-   ```
+## 🏃‍♂️ How to Run
 
-## Example Input
-```
-10 + 5 * 2 - 3
-```
+### Prerequisites
+- **Deno** installed (https://deno.land)
 
-## Output
-```
-17
-```
+### Running a Program
+1. Place your script in `test.txt` (or any file you choose).
+2. Run the interpreter:
 
-## Contributors
-- **Navneet Pathak**
-
-## License
-This project is for educational purposes only.
+```bash
+deno run --allow-read main.ts
