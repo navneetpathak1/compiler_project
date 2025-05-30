@@ -1,0 +1,38 @@
+let x = 10;
+let y = 5;
+
+if (x > y) {
+    show x;  // Should print 10
+} else {
+    show y;
+}
+
+if (x == y) {
+    show x;
+} else {
+    show y;  // Should print 5
+}
+
+if (x >= y) {
+    show x;  // Should print 10
+} else {
+    show y;
+}
+
+if (x <= y) {
+    show x;
+} else {
+    show y;  // Should print 5
+}
+
+if (x != y) {
+    show x;  // Should print 10
+} else {
+    show y;
+}
+
+if (x < y) {
+    show x;
+} else {
+    show y;  // Should print 5
+} 
